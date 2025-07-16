@@ -9,7 +9,7 @@ API RESTful para gerenciamento de fornecedores (CRUD + consulta via CNPJ). Desen
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/fornecedor-api.git
+git clone https://github.com/Andrey-Meira/teste-dev-php.git
 cd fornecedor-api
 ```
 
