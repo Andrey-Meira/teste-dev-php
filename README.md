@@ -1,54 +1,141 @@
-## Teste para Desenvolvedor PHP/Laravel
+# Fornecedor API
 
-Bem-vindo ao teste de desenvolvimento para a posição de Desenvolvedor PHP/Laravel. 
+API RESTful para gerenciamento de fornecedores (CRUD + consulta via CNPJ). Desenvolvida com [Laravel](https://laravel.com/).
 
-O objetivo deste teste é desenvolver uma API Rest para o cadastro de fornecedores, permitindo a busca por CNPJ ou CPF, utilizando Laravel no backend.
+---
 
-## Descrição do Projeto
+## 🚀 Como executar o projeto
 
-### Backend (API Laravel):
+### 1. Clonar o repositório
 
-#### CRUD de Fornecedores:
-- **Criar Fornecedor:**
-  - Permita o cadastro de fornecedores usando CNPJ ou CPF, incluindo informações como nome/nome da empresa, contato, endereço, etc.
-  - Valide a integridade e o formato dos dados, como o formato correto de CNPJ/CPF e a obrigatoriedade de campos.
+```bash
+git clone https://github.com/seu-usuario/fornecedor-api.git
+cd fornecedor-api
+```
 
-- **Editar Fornecedor:**
-  - Facilite a atualização das informações de fornecedores, mantendo a validação dos dados.
+### 2. Instalar dependências
 
-- **Excluir Fornecedor:**
-  - Possibilite a remoção segura de fornecedores.
+```bash
+composer install
+```
 
-- **Listar Fornecedores:**
-  - Apresente uma lista paginada de fornecedores, com filtragem e ordenação.
+### 3. Configurar ambiente
 
-#### Migrations:
-- Utilize migrations do Laravel para definir a estrutura do banco de dados, garantindo uma boa organização e facilidade de manutenção.
+Copie o arquivo `.env.example` e configure suas variáveis:
 
-## Requisitos
+```bash
+cp .env.example .env
+```
 
-### Backend:
-- Implementar busca por CNPJ na [BrasilAPI](https://brasilapi.com.br/docs#tag/CNPJ/paths/~1cnpj~1v1~1{cnpj}/get) ou qualquer outro endpoint público.
+Atualize as credenciais do banco de dados no arquivo `.env`:
 
-## Tecnologias a serem utilizadas
-- Framework Laravel (PHP) 9.x ou superior
-- MySQL ou Postgres
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=fornecedor_api
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+```
 
-## Critérios de Avaliação
-- Adesão aos requisitos funcionais e técnicos.
-- Qualidade do código, incluindo organização, padrões de desenvolvimento e segurança.
-- Documentação do projeto, incluindo um README detalhado com instruções de instalação e operação.
+### 4. Gerar a chave da aplicação
 
-## Bônus
-- Implementação de Repository Pattern.
-- Implementação de testes automatizados.
-- Dockerização do ambiente de desenvolvimento.
-- Implementação de cache para otimizar o desempenho.
+```bash
+php artisan key:generate
+```
 
-## Entrega
-- Para iniciar o teste, faça um fork deste repositório; Se você apenas clonar o repositório não vai conseguir fazer push.
-- Crie uma branch com o nome que desejar;
-- Altere o arquivo README.md com as informações necessárias para executar o seu teste (comandos, migrations, seeds, etc);
-- Depois de finalizado, envie-nos o pull request;
+### 5. Rodar as migrações
 
+```bash
+php artisan migrate
+```
 
+### 6. Rodar o servidor local
+
+```bash
+php artisan serve
+```
+
+A aplicação estará disponível em `http://localhost:8000`.
+
+---
+
+## 🧪 Endpoints disponíveis
+
+> Prefixo: `/api`
+
+### 🔍 `GET /busca-cnpj/{cnpj}`
+
+Consulta dados públicos do CNPJ usando a [BrasilAPI](https://brasilapi.com.br/).
+
+---
+
+### ➕ `POST /fornecedor`
+
+Cria um novo fornecedor.
+
+**Payload:**
+
+```json
+{
+    "tipo_documento": "CPF", // ou "CNPJ"
+    "documento": "12345678900",
+    "nome_fantasia": "Empresa XPTO",
+    "razao_social": "XPTO LTDA",
+    "email": "contato@empresa.com",
+    "telefone": "11999999999",
+    "endereco": "Rua Exemplo, 123"
+}
+```
+
+---
+
+### 📄 `GET /fornecedores`
+
+Lista fornecedores com paginação e filtros opcionais:
+
+**Query params disponíveis:**
+
+-   `nome_fantasia`
+-   `razao_social`
+-   `documento`
+-   `tipo_documento`
+-   `order_by`: `nome_fantasia`, `razao_social`, `documento`, `created_at`
+-   `per_page`: quantidade por página
+
+---
+
+### 📂 `GET /fornecedor/{id}`
+
+Exibe um fornecedor pelo UUID.
+
+---
+
+### ✏️ `PUT /fornecedor/{id}`
+
+Atualiza os dados de um fornecedor (exceto `documento` e `tipo_documento`).
+
+**Payload semelhante ao POST.**
+
+---
+
+### ❌ `DELETE /fornecedor/{id}`
+
+Remove o fornecedor.
+
+---
+
+## ✅ Requisitos
+
+-   PHP 8.4.10
+-   Composer
+-   MySQL
+-   Laravel 9.52.20
+
+---
+
+## 📌 Observações
+
+-   Os documentos (CPF/CNPJ) são validados conforme o tipo informado.
+-   Os campos `documento` e `tipo_documento` não podem ser alterados após a criação.
+-   IDs são gerados como UUIDs.
